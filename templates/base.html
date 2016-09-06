@@ -1,0 +1,170 @@
+{% load extra_tags %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="es">
+<head>
+    <title> {% block title %} Kinderzentrum {% endblock %}</title>
+        <link rel="stylesheet" href="/static/css/jquery-ui.css" />
+        <link rel="stylesheet" href="/static/css/bootstrap.css" />
+        <link rel="stylesheet" href="/static/css/base.css" />
+    {% block css %}
+
+    {% endblock css %}
+     <script src="/static/js/jquery-1.9.1.js"></script>
+        <script src="/static/js/jquery-ui.js"></script>
+        <script src="/static/js/bootstrap.js"></script>
+        <script src="/static/js/registro.js"></script>
+        <script src="/static/js/modernizr.min.js"></script>
+    {% block js %}
+
+
+    {% endblock js %}
+</head>
+
+<body>
+<header>
+
+	<h1> Kinderzentrum {% block title_name %}	{% endblock %}</h1>
+  {% load staticfiles %}
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+
+			<div class="navbar-header">
+		      <a class="navbar-brand" href="{% url 'index_view' %}">
+		      	<img src="{% static "images/home.png" %}" width=30 height=30 style="margin-top:-5px;">
+		      </a>
+		    </div>
+
+			<ul class="nav navbar-nav">
+				{% if pagina_actual %}
+				{% if pagina_actual == "inicio" %}
+				<li class="active">{% else %}<li>{% endif %}
+					<a href="{% url 'index_view' %}"> Inicio </a>
+				</li>
+				{% else %}
+				<li class="active"><a href="{% url 'index_view' %}"> Inicio </a></li>
+				{% endif %}
+
+				{% if user.is_authenticated %}
+					<!--Con la variable perms accedemos a los diferentes permisos que contiene el usuario actual de la sesion-->
+					{% if user|has_group:"registro" %}
+					{% if pagina_actual == "registro" %}<li class="active dropdown">{% else %}<li class="dropdown">{% endif %}
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#"> Registro <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="{% url 'registro_view' %}">Registro de ficha medica</a></li>
+							<li><a href="{% url 'pacientes-list' %}">Lista de pacientes</a></li>
+
+				        </ul>
+					</li>
+					{% endif %}
+
+					{% if user|has_group:"cita" %}
+
+					{% if pagina_actual == "cita" %}<li class="active dropdown">{% else %}<li class="dropdown">{% endif %}
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#"> Citas <span class="caret"></span></a>
+
+						<ul class="dropdown-menu">
+							<li><a href="{% url 'reservar_cita_view' %}">Reservar cita</a></li>
+
+				        </ul>
+					</li>
+
+					<li {% if pagina_actual == "asistencia_paciente" %} class="active" {% endif %}><a href="{% url 'lista_asistencia' %}">Asistencia paciente</a></li>
+					{% endif %}
+
+
+					{% if user|has_group:"pagos" %}
+
+					<li><a href="/pagos">Pagos</a></li>
+
+					{% endif %}
+
+				{% if user.is_superuser %}
+				<li class="dropdown {% if pagina_actual == "manejo_usuarios" %} active {% endif %}">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#"> Manejo de usuarios <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="{% url 'admin_usuarios' %}">Crear nuevos usuarios</a></li>
+							<li><a href="{% url 'usuarios_permisos' %}">Actualizar permisos de usuarios</a></li>
+							<li><a href="{% url 'changepassword' %}">Cambiar mi contraseña</a></li>
+				        </ul>
+				</li>
+        {% else %}
+          <li><a href="{% url 'changepassword' %}">Cambiar contraseña</a></li>
+				{% endif %}
+				{% endif %}
+				
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+		      	{% if user.is_authenticated %}
+				<li><a href="{% url 'logout_view' %}"><span class="glyphicon glyphicon-log-out"></span> Logout - {{user.first_name}}</a></li>
+				{% else %}
+				<!--li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li-->
+				<li><a href="{% url 'login_view' %}"><span class="glyphicon glyphicon-log-in"></span> Login </a></li>
+				{% endif %}
+		    </ul>
+		</div>
+	</nav>
+</header>
+
+<section>
+	<h2>{{ advertencia }}</h2>
+  {% if pagina_actual == "inicio" %}
+<div class="container">
+  <br>
+  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#myCarousel" data-slide-to="1"></li>
+      <li data-target="#myCarousel" data-slide-to="2"></li>
+      <li data-target="#myCarousel" data-slide-to="3"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+      <div class="item active">
+        <img src='{% static "images/logo carousel.jpg" %}' alt="Logo" width="460" height="345">
+      </div>
+
+      <div class="item">
+        <img src='{% static "images/foto1.jpg" %}' alt="Foto1" width="460" height="345">
+      </div>
+    
+      <div class="item">
+        <img src='{% static "images/foto2.jpg" %}' alt="Foto2" width="460" height="345">
+      </div>
+
+      <div class="item">
+        <img src='{% static "images/foto3.jpg" %}' alt="Foto3" width="460" height="345">
+      </div>
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+</div>
+<br><br>
+<div class="container">
+	<div class="well text-justify">
+	  Kinderzentrum es una iniciativa de la Fundación Herta Seebass en Ecuador. Fue creada en mayo de 1995 por Hannelore Seebass, esposa del exdirecto del Colegio Alemán de Guayaquil Dr. Ernst Seebass.<br><br>
+	  Su ideología sentó la base terapéutica de la fundación, haciendo que tanto hijos como padres recibieran, bajo el mismo techo, la atención necesitada para afrontar diversas dificultades.
+	</div>
+</div>
+
+
+
+  {% endif %}
+	{% block content %}
+	{% endblock %}
+    {% block script %}
+    {% endblock script %}
+</section>
+
+</body>
+</html>
