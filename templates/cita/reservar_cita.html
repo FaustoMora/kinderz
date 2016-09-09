@@ -26,8 +26,6 @@
     <div id="event_edit_container">
 
 
-       <form method="POST" action="/cita/">
-            {% csrf_token %}
            <ul>
 
                 <li>
@@ -35,10 +33,9 @@
                     <!--
                         <input type = "text" id = "date" name = "date_holder" readonly = "readonly" placeholder = "Fecha cita" />
                     -->
-                    <input type = "text" id = "date" name = "date_holder" readonly placeholder = "Fecha cita" />
+                    <input type = "text" id = "date" name = "date_holder" readonly placeholder = "Fecha cita" required />
 
                </li>
-                <br/>
 
 
                 <li>
@@ -58,8 +55,6 @@
                     </select>
                 </li>
 
-                <br/>
-
                 <li>
                    <label for = "horafin">Hora fin</label>
                     <!--
@@ -77,28 +72,20 @@
 
                 </li>
 
-                <br/>
-
-
                <li>
                     <label for = "paciente">Seleccione un paciente</label>
-                    <select name = "paciente">
-                        {{ pacientes }}
-                        <option value = "0">Seleccione una opcion</option>
+                    <select name = "paciente"required >
+                        <option value = "">Seleccione una opcion</option>
                         {% for paciente in pacientes %}
                             <option value="{{ paciente.id}}">{{ paciente.nombres  }} {{ paciente.apellidos  }}</option>
                         {% endfor %}
                     </select>
                 </li>
 
-                <br/>
-
-
                 <li>
                     <label for = "tipoterapia">Seleccione un tipo de terapia</label>
-                    <select name = "tipoterapia">
-                        {{ tipo_terapia_list }}
-                        <option value = "0">Seleccione una opcion</option>
+                    <select name = "tipoterapia"required >
+                        <option value = "">Seleccione una opcion</option>
                         {% for tipo_terapia in tipo_terapia_list %}
                             <option value="{{ tipo_terapia.id}}">{{ tipo_terapia.nombre  }}</option>
                         {% endfor %}
@@ -109,26 +96,38 @@
 
                 <li>
                     <label for = "terapista">Seleccione un terapista</label>
-                    <select name = "terapista">
-                        {{ terapista_list }}
-                        <option value = "0">Seleccione una opcion</option>
+                    <select name = "terapista" required >
+                        <option value = "">Seleccione una opcion</option>
                         {% for terapista in terapista_list %}
                             <option value="{{ terapista.id}}">{{ terapista.nombres  }} {{ terapista.apellidos  }}</option>
                         {% endfor %}
                     </select>
                 </li>
 
-                <br/>
+                <li>
+                    <label>Estado de la cita</label>
+                    <select name = "estados" required >
+                        {% for es in estados %}
+                            {% if es.0 == 'A' %}
+                            <option value="{{ es.0}}" selected>{{ es.1  }}</option>
+                            {% else %}
+                            <option value="{{ es.0}}">{{ es.1  }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </li>
+
+                <li>
+                    <label>Indicaciones:</label>
+                    <textarea name="indicaciones" cols="3" rows="5" style="resize:none;">
+                    </textarea>
+                </li>
 
             </ul>
-            <div id = "savediv">
-                <button id="enviar" type="submit" class="btn btn-primary">
-                    <i class="icon-user icon-white"></i> Guardar
-                </button>
-            </div>
-        </form>
+        
 
     </div>
+    
     <div id="about">
 
     </div>
@@ -138,7 +137,5 @@
 {% endblock %}
 
 {% block script %}
-
-  <script src='/static/js/cita/select.js'></script>
   
 {% endblock script %}

@@ -51,7 +51,7 @@ INSTALLED_APPS = (
     'registro',
     'cita',
     'asistencia',
-    'pago',
+    #'pago',
     'django_extensions',
 )
 
